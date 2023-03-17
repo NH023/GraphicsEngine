@@ -17,37 +17,79 @@ public class GraphicsCreator extends ImageGenerator
     }
   }
 
-  //Currently only for slopes < 1
+  // Bresenham's Algorithm for Line Drawing
   public void line(Point point1, Point point2, Color color)
   {
 
-    if(point1.x > point2.x){
-      //swap
-      Point temp = point1;
-      point1 = point2;
-      point2 = temp;
-    }
+    int x,y,dx,dy,neg;
 
-    int x = point1.x;
-    int y = point1.y;
+    dx = point2.x-point1.x;
+    dy = point2.y-point1.y;
 
-    int dx = point2.x - point1.x;
-    int dy = point2.y - point1.y;
+    neg = (dy<0 ^ dx<0) ? -1 : 1;
 
-    int p = (2*dy) - dx;
-
-    while(x < point2.x)
+    // Slope < 1
+    if(Math.abs(dx) >= Math.abs(dy))
     {
-      this.setPixel(x,y,color);
-      x++;
-      if(p<0)
+
+      if(point1.x > point2.x)
       {
-        p = p + (2*dy);
-      } else
-      {
-        p = p + (2*dy) - (2*dx);
-        y++;
+        Point temp = point1;
+        point1 = point2;
+        point2 = temp;
+
+        // Opposite values due to swap
+        dx *= -1;
+        dy *= -1;
       }
+
+      x = point1.x;
+      y = point1.y;
+
+      int p = (2*dy) - dx;
+
+      while(x < point2.x)
+      {
+        this.setPixel(x,y,color);
+        x++;
+        if(p<0) {
+          p = p + ((2*dy) * neg);
+        } else {
+          p = p + (2*dy) - (2*dx);
+          y += neg;
+        }
+      }
+
+    } 
+    // Slope > 1
+    else {
+      if(point1.y > point2.y)
+      {
+        Point temp = point1;
+        point1 = point2;
+        point2 = temp;
+        dx *= -1;
+        dy *= -1;
+      }
+
+      x = point1.x;
+      y = point1.y;
+
+      int p = dy - (2*dx);
+
+      while(y < point2.y)
+      {
+        this.setPixel(x,y,color);
+        y++;
+        if(p<0)
+        {
+          p = p + ((2*dx) * neg);
+        } else {
+          p = p + (2*dx) - (2*dy) ;
+          x += neg;
+        }
+      }
+
     }
 
   }
@@ -63,9 +105,9 @@ public class GraphicsCreator extends ImageGenerator
 
   public void hSquare(Point p1, Point p2, Color color)
   {
-    this.line(new Point(p1.x,p1.y),new Point(p2.x,p1.y),color);
-    this.line(new Point(p2.x,p1.y),new Point(p2.x,p2.y),color);
-    this.line(new Point(p2.x,p2.y),new Point(p1.x,p2.y),color);
-    this.line(new Point(p1.x,p2.y),new Point(p1.x,p1.y),color);
+    this.line(p1, new Point(p2.x+1,p1.y), color);
+    this.line(new Point(p2.x,p1.y+1), p2, color);
+    this.line(p2, new Point(p1.x+1,p2.y), color);
+    this.line(new Point(p1.x,p2.y+1), new Point(p1.x-1,p1.y), color);
   }
 }
