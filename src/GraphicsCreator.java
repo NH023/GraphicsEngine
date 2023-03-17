@@ -17,35 +17,39 @@ public class GraphicsCreator extends ImageGenerator
     }
   }
 
-  /*DDA Algorithm for Line Drawing
-   *Will be changed to Bessenham's Algorithm At A Later Time
-   *DDA ALgoritm is trash */
-  public void line(Point p1, Point p2, Color color)
+  //Currently only for slopes < 1
+  public void line(Point point1, Point point2, Color color)
   {
-    int dx = p2.x - p1.x;
-    int dy = p2.y - p1.y;
 
-    int steps = Math.abs(dy);
-    
-    if(dx > dy){
-      steps = Math.abs(dx);
+    if(point1.x > point2.x){
+      //swap
+      Point temp = point1;
+      point1 = point2;
+      point2 = temp;
     }
 
-    double xInc = dx*1.0/steps;
-    double yInc = dy*1.0/steps;
+    int x = point1.x;
+    int y = point1.y;
 
-    double x = p1.x;
-    double y = p1.y;
+    int dx = point2.x - point1.x;
+    int dy = point2.y - point1.y;
 
-    
-    for(int i=0; i < steps; i++)
+    int p = (2*dy) - dx;
+
+    while(x < point2.x)
     {
-      this.setPixel((int)Math.round(x),(int)Math.round(y),color);
-      x = x + xInc;
-      y = y + yInc;
+      this.setPixel(x,y,color);
+      x++;
+      if(p<0)
+      {
+        p = p + (2*dy);
+      } else
+      {
+        p = p + (2*dy) - (2*dx);
+        y++;
+      }
     }
-    
-    
+
   }
   
   public void square(Point p1, Point p2, Color color)
