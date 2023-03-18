@@ -28,8 +28,43 @@ public class GraphicsCreator extends ImageGenerator
 
     neg = (dy<0 ^ dx<0) ? -1 : 1;
 
-    // Slope < 1
-    if(Math.abs(dx) >= Math.abs(dy))
+
+    
+    if(dy == 0) // Horizontal Line
+    {
+
+      if(point1.x > point2.x)
+      {
+        Point temp = point1;
+        point1 = point2;
+        point2 = temp;
+      }
+
+      x = point1.x;
+
+      while(x <= point2.x)
+      {
+        this.setPixel(x, point1.y, color);
+        x++;
+      }
+    } else if(dx == 0) // Vertical Line
+    {
+
+      if(point1.y > point2.y)
+      {
+        Point temp = point1;
+        point1 = point2;
+        point2 = temp;
+      }
+
+
+      y = point1.y;
+      while(y <= point2.y)
+      {
+        this.setPixel(point1.x, y, color);
+        y++;
+      }
+    } else if(Math.abs(dx) >= Math.abs(dy)) // Slope < 1
     {
 
       if(point1.x > point2.x)
@@ -48,7 +83,7 @@ public class GraphicsCreator extends ImageGenerator
 
       int p = (2*dy) - dx;
 
-      while(x < point2.x)
+      while(x <= point2.x)
       {
         this.setPixel(x,y,color);
         x++;
@@ -60,9 +95,8 @@ public class GraphicsCreator extends ImageGenerator
         }
       }
 
-    } 
-    // Slope > 1
-    else {
+    } else // Slope > 1
+    {
       if(point1.y > point2.y)
       {
         Point temp = point1;
@@ -77,7 +111,7 @@ public class GraphicsCreator extends ImageGenerator
 
       int p = dy - (2*dx);
 
-      while(y < point2.y)
+      while(y <= point2.y)
       {
         this.setPixel(x,y,color);
         y++;
@@ -105,9 +139,9 @@ public class GraphicsCreator extends ImageGenerator
 
   public void hSquare(Point p1, Point p2, Color color)
   {
-    this.line(p1, new Point(p2.x+1,p1.y), color);
-    this.line(new Point(p2.x,p1.y+1), p2, color);
-    this.line(p2, new Point(p1.x+1,p2.y), color);
-    this.line(new Point(p1.x,p2.y+1), new Point(p1.x-1,p1.y), color);
+    this.line(p1, new Point(p2.x,p1.y), color);
+    this.line(new Point(p2.x,p1.y), p2, color);
+    this.line(p2, new Point(p1.x,p2.y), color);
+    this.line(new Point(p1.x,p2.y), p1, color);
   }
 }
