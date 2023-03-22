@@ -48,7 +48,18 @@ public class ImageGenerator
   public void setPixel(int x, int y, Color color)
   {
     int c = color.getRGB();
+
+    // Handling Transparency
+    if(color.getAlpha() < 255){
+
+      Pixel p = new Pixel(color);
+      Pixel before = new Pixel(image.getRGB(x,y));
+      c = p.correction(before).getRGB();
+      
+    }
+
     this.image.setRGB(x,y,c);
+
   }
 
   public Color getPixel(int x, int y)

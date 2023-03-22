@@ -81,7 +81,7 @@ public class GraphicsCreator extends ImageGenerator
       x = point1.x;
       y = point1.y;
 
-      int p = (2*dy) - dx;
+      int p = ((2*dy) * neg) - dx;
 
       while(x <= point2.x)
       {
@@ -90,7 +90,7 @@ public class GraphicsCreator extends ImageGenerator
         if(p<0) {
           p = p + ((2*dy) * neg);
         } else {
-          p = p + (2*dy) - (2*dx);
+          p = p + ((2*dy) * neg) - (2*dx);
           y += neg;
         }
       }
@@ -109,7 +109,7 @@ public class GraphicsCreator extends ImageGenerator
       x = point1.x;
       y = point1.y;
 
-      int p = dy - (2*dx);
+      int p = dy - ((2*dx) * neg);
 
       while(y <= point2.y)
       {
@@ -119,7 +119,7 @@ public class GraphicsCreator extends ImageGenerator
         {
           p = p + ((2*dx) * neg);
         } else {
-          p = p + (2*dx) - (2*dy) ;
+          p = p + ((2*dx) * neg) - (2*dy) ;
           x += neg;
         }
       }
@@ -144,4 +144,14 @@ public class GraphicsCreator extends ImageGenerator
     this.line(p2, new Point(p1.x,p2.y), color);
     this.line(new Point(p1.x,p2.y), p1, color);
   }
+
+  public void polygon(Point[] vertices, Color color)
+  {
+    for(int i = 0; i < vertices.length-1; i++)
+    {
+      this.line(vertices[i],vertices[i+1],color);
+    }
+    this.line(vertices[vertices.length-1],vertices[0],color);
+  }
+  
 }
