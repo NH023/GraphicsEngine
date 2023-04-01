@@ -1,3 +1,5 @@
+package image;
+
 import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
 import java.awt.Color;
@@ -5,11 +7,15 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import java.awt.image.WritableRaster;
 
+import structures.Pixel;
+import structures.Point;
+
 public class ImageGenerator {
 
   protected String filename;
   protected BufferedImage image;
   protected Graphics2D graphics;
+
 
   public ImageGenerator(int width, int height, String filename) {
     this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -17,6 +23,7 @@ public class ImageGenerator {
     this.graphics = image.createGraphics();
     this.graphics.dispose();
   }
+
 
   // Saves an image to a new file (or existing)
   public void saveImage(boolean force) {
@@ -28,11 +35,16 @@ public class ImageGenerator {
       // If force is set to true, then if a
       // file exists with the same name, it is overwritten
       // otherwise, an error is thrown
-      if (output.exists() && !force) {
-        throw new Exception("Cannot Create New Image, (File Name Taken)");
-      } else {
+      System.out.println(output.getParentFile().getCanonicalPath());
+      File existanceChecking = output.getParentFile();
+
+      // Force editing checker while also checking if the directory exists in the first place
+      if (output.exists() && !force)
+        throw new Exception("Cannot Create New Image, (Path Taken)");
+      else if(!existanceChecking.isDirectory())
+        throw new Exception("Path Does Not Exist, (" + existanceChecking.getAbsolutePath() + ").");
+      else 
         output.createNewFile();
-      }
 
       // Write the image to the File
       ImageIO.write(image, "png", output);
@@ -41,18 +53,17 @@ public class ImageGenerator {
     }
   }
 
-  // Getter and Setter Methods
 
-  // setPixel when passing a Color object
-  public void setPixel(int x, int y, Color color) {
+
+  // setPixel when passing a Pixel object
+  public void setPixel(int x, int y, Pixel color) {
     int c = color.getRGB();
 
     // Handling Transparency
     if (color.getAlpha() < 255) {
 
-      Pixel p = new Pixel(color);
       Pixel before = new Pixel(image.getRGB(x, y));
-      c = p.correction(before).getRGB();
+      c = color.correction(before).getRGB();
 
     }
 
@@ -60,16 +71,16 @@ public class ImageGenerator {
 
   }
 
-  public void setPixel(Point p, Color color) {
+
+  public void setPixel(Point p, Pixel color) {
 
     int c = color.getRGB();
 
     // Handling Transparency
     if (color.getAlpha() < 255) {
 
-      Pixel pix = new Pixel(color);
       Pixel before = new Pixel(image.getRGB(p.x, p.y));
-      c = pix.correction(before).getRGB();
+      c = color.correction(before).getRGB();
 
     }
 
@@ -77,30 +88,37 @@ public class ImageGenerator {
 
   }
 
+
   public Pixel getPixel(int x, int y) {
     int colorInt = this.image.getRGB(x, y);
     return new Pixel(colorInt, true);
   }
+
 
   public Pixel getPixel(Point p) {
     int colorInt = this.image.getRGB(p.x, p.y);
     return new Pixel(colorInt, true);
   }
 
+
   public String getFileName() {
     return this.filename;
   }
+
 
   public void setFileName(String newFileName) {
     this.filename = newFileName;
   }
 
+
   public int getHeight() {
     return this.image.getHeight();
   }
+
 
   public int getWidth() {
     return this.image.getWidth();
   }
 
+  
 }

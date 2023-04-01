@@ -1,3 +1,5 @@
+package structures;
+
 public class Point
 {
 
@@ -20,9 +22,23 @@ public class Point
     return new Point(this.x + other.x, this.y + other.y);
   }
 
+  public Point add(int x, int y)
+  {
+    this.x += x;
+    this.y += y;
+    return this;
+  }
+
   public Point sub(Point other)
   {
     return new Point(this.x - other.x, this.y - other.y);
+  }
+
+  public Point sub(int x, int y)
+  {
+    this.x -= x;
+    this.y -= y;
+    return this;
   }
 
   public Point mult(Point other)
@@ -30,9 +46,23 @@ public class Point
     return new Point(this.x * other.x, this.y * other.y);
   }
 
+  public Point mult(int x, int y)
+  {
+    this.x *= x;
+    this.y *= y;
+    return this;
+  }
+
   public Point div(Point other)
   {
     return new Point(this.x / other.x, this.y / other.y);
+  }
+
+  public Point div(int x, int y)
+  {
+    this.x /= x;
+    this.y /= y;
+    return this;
   }
 
   public boolean equals(Point other)

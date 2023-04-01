@@ -1,0 +1,1 @@
+javac -classpath src/ -d bin/ src/main.java && java -classpath bin/ src/main.java

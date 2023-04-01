@@ -1,3 +1,5 @@
+package structures;
+
 import java.awt.Color;
 
 public class Pixel extends Color
@@ -25,6 +27,20 @@ public class Pixel extends Color
 
   public Pixel(int rgb, boolean alpha) {
     super(rgb,alpha);
+  }
+
+  public static Pixel colorOf(String name)
+  {
+    try{
+      Color c = (Color)(Color.class.getDeclaredField(name).get(null));
+      Pixel p = new Pixel(c);
+
+      return p;
+
+    } catch (Exception e){
+      e.printStackTrace();
+    }
+    return new Pixel(0,0,0);
   }
   
   //Made For Transparency
@@ -61,7 +77,7 @@ public class Pixel extends Color
   @Override
   public String toString()
   {
-    return "(" + this.getRed() + "," + this.getGreen() + "," + this.getBlue() + "," + this.getAlpha() + ")";
+    return "RGBA(" + this.getRed() + "," + this.getGreen() + "," + this.getBlue() + "," + this.getAlpha() + ")";
   }
   
 }

@@ -1,6 +1,10 @@
+package image;
+
 import java.awt.Color;
-import java.lang.Exception;
 import java.util.ArrayList;
+
+import structures.Point;
+import structures.Pixel;
 
 public class GraphicsCreator extends ImageGenerator {
 
@@ -8,9 +12,10 @@ public class GraphicsCreator extends ImageGenerator {
     super(width, height, filename);
   }
 
+
   // Converts all pixels to this color
   // Covers image
-  public void cover(Color color) {
+  public void cover(Pixel color) {
     for (int i = 0; i < this.getWidth(); i++) {
       for (int j = 0; j < this.getHeight(); j++) {
         this.setPixel(i, j, color);
@@ -18,12 +23,14 @@ public class GraphicsCreator extends ImageGenerator {
     }
   }
 
-  public void fill(Point start, Color color)
+  // Wrapper for the ScanFill Algorithm
+  public void fill(Point start, Pixel color)
   {
     this.scanFill(start, color, this.getPixel(start));
   }
 
-  private void scanFill(Point start, Color color, Color target)
+
+  private void scanFill(Point start, Pixel color, Pixel target)
   {
     
     boolean canFindUp = true;
@@ -41,7 +48,6 @@ public class GraphicsCreator extends ImageGenerator {
     
     // Checks if the pixel above is the target
     Point current = start.copy();
-    //System.out.println(this.getPixel(current) + " " + target);
     while(current.x < this.getWidth() && this.getPixel(current).equals(target))
     {
       this.setPixel(current,color);
@@ -51,7 +57,6 @@ public class GraphicsCreator extends ImageGenerator {
       if(up.y < this.getHeight()){
         
         if(this.getPixel(up).equals(target) && canFindUp){
-          //this.scanFill(up,color,target,lim-1);
           seeds.add(up);
           canFindUp = false;
         } else if(!this.getPixel(up).equals(target) && !canFindUp){
@@ -66,7 +71,6 @@ public class GraphicsCreator extends ImageGenerator {
       if(down.y >= 0){
         //System.out.println(down + " " + this.getPixel(down) + " | " + target);
         if(this.getPixel(down).equals(target) && canFindDown){
-          //this.scanFill(down,color,target,lim-1);
           seeds.add(down);
           canFindDown = false;
         } else if(!this.getPixel(down).equals(target) && !canFindDown){
@@ -86,63 +90,10 @@ public class GraphicsCreator extends ImageGenerator {
     }
     
   }
-  
-  // RECURSIVE FLOODFILL . Breaks and doesn't work properly
-  // Wrapper for brokenFill 
-  // Had to do this because I didn't want to have the user
-  // pass in the original color :)
-  /*public void fill(Point start, Color color, int lim) {
-    this.brokenFill(start, color, this.getPixel(start), lim);
-  }
 
-  // Fills a shape until the walls are reached
-  // Recursivly checks the walls and changes the colors
-  private void brokenFill(Point start, Color color, Color original, int lim) {
-
-    if (lim < 1) {
-      return;
-    }
-
-    if(!this.getPixel(start).equals(original) || this.getPixel(start).equals(color)){
-      return;
-    }
-
-    // Cross Shape
-    Point left = new Point(start.x - 1, start.y);
-    Point right = new Point(start.x + 1, start.y);
-    Point up = new Point(start.x, start.y + 1);
-    Point down = new Point(start.x, start.y - 1);
-
-    // Set the Pixel
-    // This makes it so the recursion doesn't double back on itself
-    // Many StackOverflow errors were present in the making
-    this.setPixel(start, color);
-    this.image.flush();
-
-    // Travels to the Right
-    if (right.x < this.getWidth()) {
-      this.brokenFill(right, color, original, lim - 1);
-    }
-
-    // Travels Up
-    if (up.y < this.getHeight()) {
-      this.brokenFill(up, color, original, lim - 1);
-    }
-
-    // Travels to the Left
-    if (left.x > 0) {
-      this.brokenFill(left, color, original, lim - 1);
-    }
-
-    // Travels Down
-    if (down.y > 0) {
-      this.brokenFill(down, color, original, lim - 1);
-    }
-    
-  }*/
 
   // Bresenham's Algorithm for Line Drawing
-  public void line(Point point1, Point point2, Color color) {
+  public void line(Point point1, Point point2, Pixel color) {
 
     int x, y, dx, dy, neg;
 
@@ -248,7 +199,8 @@ public class GraphicsCreator extends ImageGenerator {
 
   }
 
-  public Point line(Point start, double angle, int length, Color color) {
+
+  public Point line(Point start, double angle, int length, Pixel color) {
 
     int x = (int) (Math.round(Math.cos(Math.toRadians(-angle)) * length + start.x));
     int y = (int) (Math.round(Math.sin(Math.toRadians(-angle)) * length + start.y));
@@ -259,8 +211,9 @@ public class GraphicsCreator extends ImageGenerator {
 
   }
 
+
   // Makes a filled quadrilateral
-  public void quadrilateral(Point p1, Point p2, Color color) {
+  public void quadrilateral(Point p1, Point p2, Pixel color) {
     for (int i = p1.x; i < p2.x; i++) {
       for (int j = p1.y; j < p2.y; j++) {
         this.setPixel(i, j, color);
@@ -268,22 +221,25 @@ public class GraphicsCreator extends ImageGenerator {
     }
   }
 
+
   // Makes a hollow quadrilateral (just the edges)
-  public void hQuadrilateral(Point p1, Point p2, Color color) {
+  public void hQuadrilateral(Point p1, Point p2, Pixel color) {
     this.line(p1, new Point(p2.x, p1.y), color);
     this.line(new Point(p2.x, p1.y), p2, color);
     this.line(p2, new Point(p1.x, p2.y), color);
     this.line(new Point(p1.x, p2.y), p1, color);
   }
 
-  public void polygon(Point[] vertices, Color color) {
+
+  public void polygon(Point[] vertices, Pixel color) {
     for (int i = 0; i < vertices.length - 1; i++) {
       this.line(vertices[i], vertices[i + 1], color);
     }
     this.line(vertices[vertices.length - 1], vertices[0], color);
   }
 
-  public void regularGon(Point center, int size, int sides, Color color) {
+
+  public void regularGon(Point center, int size, int sides, Pixel color) {
     double interiorAngle = ((sides - 2) * 180) * 1.0 / sides;
     double currentAngle = 0;
     Point startSpot = center;

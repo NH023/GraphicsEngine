@@ -1,16 +1,24 @@
+/*
+ * Site to Build and Test the Modules
+ */
+
+import structures.Point;
+import structures.Pixel;
+
+import image.GraphicsCreator;
+
 class Main {
   public static void main(String[] args) {
 
     GraphicsCreator gen = new GraphicsCreator(100, 100, "output/image.png");
 
-    gen.cover(Pixel.WHITE);
+    gen.cover(Pixel.colorOf("white"));
     Point[] vertices = {new Point(20,20),new Point(99,50),new Point(80,60),new Point(0,60)};
-    gen.polygon(vertices,Pixel.BLACK);
+    gen.polygon(vertices,Pixel.colorOf("black"));
 
-    gen.fill(new Point(0,0),Pixel.GREEN);
-    gen.fill(new Point(0,99),Pixel.BLUE);
-    gen.fill(new Point(50,50),Pixel.RED);
-    //gen.fill(new Point(0,99),Pixel.RED);
+    gen.fill(new Point(0,0),Pixel.colorOf("green"));
+    gen.fill(new Point(0,99),Pixel.colorOf("blue"));
+    gen.fill(new Point(50,50),Pixel.colorOf("red"));
 
     // gen.hQuadrilateral(new Point(10,10), new Point(90,90), Pixel.WHITE);
 
