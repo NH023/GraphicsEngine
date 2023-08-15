@@ -1,6 +1,6 @@
 package image;
 
-import java.awt.Color;
+
 import java.util.ArrayList;
 
 import structures.Point;
@@ -47,7 +47,7 @@ public class GraphicsCreator extends ImageGenerator {
     }
     
     
-    // Checks if the pixel above is the target
+    // Loops through row until a different color is found
     Point current = start.copy();
     while(current.x < this.getWidth() && this.getPixel(current).equals(target))
     {
@@ -92,10 +92,10 @@ public class GraphicsCreator extends ImageGenerator {
   }
 
   // For Dialation Masking to make stroke size bigger
-  private void applyMask(Point p, int iter) {
+  /*private void applyMask(Point p, int iter) {
     if(iter == 0) return;
 
-  }
+  }*/
 
   // Bresenham's Algorithm for Line Drawing
   public void line(Point point1, Point point2, Pixel color) {
@@ -205,18 +205,6 @@ public class GraphicsCreator extends ImageGenerator {
   }
 
 
-  public Point line(Point start, double angle, int length, Pixel color) {
-
-    int x = (int) (Math.round(Math.cos(Math.toRadians(-angle)) * length + start.x));
-    int y = (int) (Math.round(Math.sin(Math.toRadians(-angle)) * length + start.y));
-    Point end = new Point(x, y);
-
-    this.line(start, end, color);
-    return end;
-
-  }
-
-
   // Makes a filled quadrilateral
   public void quadrilateral(Point p1, Point p2, Pixel color) {
     for (int i = p1.x; i < p2.x; i++) {
@@ -241,18 +229,6 @@ public class GraphicsCreator extends ImageGenerator {
       this.line(vertices[i], vertices[i + 1], color);
     }
     this.line(vertices[vertices.length - 1], vertices[0], color);
-  }
-
-
-  public void regularGon(Point center, int size, int sides, Pixel color) {
-    double interiorAngle = ((sides - 2) * 180) * 1.0 / sides;
-    double currentAngle = 0;
-    Point startSpot = center;
-    for (int i = 0; i < sides; i++) {
-      startSpot = this.line(startSpot, currentAngle, size, color);
-      currentAngle = (currentAngle + (180 - interiorAngle)) % 360;
-    }
-
   }
 
 }

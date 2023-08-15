@@ -6,6 +6,7 @@ import structures.Point;
 import structures.Pixel;
 
 import image.GraphicsCreator;
+import image.ImageEditor;
 
 class Main {
   public static void main(String[] args) {
@@ -25,7 +26,7 @@ class Main {
     //gen.fill(new Point(50, 50), Pixel.YELLOW);
     gen.saveImage(true);*/
 
-    GraphicsCreator gen = new GraphicsCreator(101,51,"output/test.png");
+    /*GraphicsCreator gen = new GraphicsCreator(101,51,"output/test.png");
 
     //gen.cover(Pixel.colorOf("red"));
     gen.fill(new Point(0,0), Pixel.colorOf("red"));
@@ -34,6 +35,12 @@ class Main {
     gen.setPixel(1,0,Pixel.colorOf("black"));
     gen.saveImage(true);
 
-    System.out.println("Eureka!");
+    System.out.println("Eureka!");*/
+
+    ImageEditor image = new ImageEditor("output/EpicLandscape.png");
+    image.load("landscape.jpg");
+    image.invert_colors();
+    image.saveImage(true);
+
   }
 }

@@ -2,10 +2,8 @@ package image;
 
 import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
-import java.awt.Color;
 import java.io.File;
 import javax.imageio.ImageIO;
-import java.awt.image.WritableRaster;
 
 import structures.Pixel;
 import structures.Point;
@@ -17,6 +15,9 @@ public class ImageGenerator {
   protected Pixel[][] image;
   protected Graphics2D graphics;
 
+  public ImageGenerator(String filename){
+    this.filename = filename;
+  }
 
   // Basic constructor for the image generation
   public ImageGenerator(int width, int height, String filename) {
@@ -38,6 +39,14 @@ public class ImageGenerator {
 
   }
 
+  public void refresh_image_array(){
+    this.image = new Pixel[bufferedimage.getHeight()][bufferedimage.getWidth()];
+    for(int i=0; i<image.length; i++){
+      for(int j=0; j<image[0].length; j++){
+        image[i][j] = new Pixel(bufferedimage.getRGB(j, i));
+      }
+    }
+  }
 
   // Saves an image to a new file (or existing)
   public void saveImage(boolean force) {
