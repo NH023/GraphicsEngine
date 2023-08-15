@@ -8,8 +8,15 @@ import structures.Pixel;
 
 public class GraphicsCreator extends ImageGenerator {
 
+  //private int[][] dilationMask;
+
   public GraphicsCreator(int width, int height, String filename) {
     super(width, height, filename);
+    /*this.dilationMask = {
+      {0,1,0},
+      {1,1,1},
+      {0,1,0}
+    };*/
   }
 
 
@@ -24,11 +31,7 @@ public class GraphicsCreator extends ImageGenerator {
   }
 
   // Wrapper for the ScanFill Algorithm
-  public void fill(Point start, Pixel color)
-  {
-    this.scanFill(start, color, this.getPixel(start));
-  }
-
+  public void fill(Point start, Pixel color) { this.scanFill(start, color, this.getPixel(start)); }
 
   private void scanFill(Point start, Pixel color, Pixel target)
   {
@@ -42,8 +45,6 @@ public class GraphicsCreator extends ImageGenerator {
     {
       start = new Point(start.x-1,start.y);
     }
-
-    //System.out.println(start);
     
     
     // Checks if the pixel above is the target
@@ -69,7 +70,6 @@ public class GraphicsCreator extends ImageGenerator {
       // Checks if the pixel below is the target
       Point down = new Point(current.x, current.y-1);
       if(down.y >= 0){
-        //System.out.println(down + " " + this.getPixel(down) + " | " + target);
         if(this.getPixel(down).equals(target) && canFindDown){
           seeds.add(down);
           canFindDown = false;
@@ -91,6 +91,11 @@ public class GraphicsCreator extends ImageGenerator {
     
   }
 
+  // For Dialation Masking to make stroke size bigger
+  private void applyMask(Point p, int iter) {
+    if(iter == 0) return;
+
+  }
 
   // Bresenham's Algorithm for Line Drawing
   public void line(Point point1, Point point2, Pixel color) {

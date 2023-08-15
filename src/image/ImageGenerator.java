@@ -13,15 +13,29 @@ import structures.Point;
 public class ImageGenerator {
 
   protected String filename;
-  protected BufferedImage image;
+  protected BufferedImage bufferedimage;
+  protected Pixel[][] image;
   protected Graphics2D graphics;
 
 
+  // Basic constructor for the image generation
   public ImageGenerator(int width, int height, String filename) {
-    this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+    // Creating the buffered image and pixel array
+    this.bufferedimage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    this.image = new Pixel[bufferedimage.getHeight()][bufferedimage.getWidth()];
+
+    // Fills image with white pixels
+    for(int i=0; i<image.length; i++){
+      for(int j=0; j<image[0].length; j++){
+        image[i][j] = new Pixel(255,255,255);
+      }
+    }
+
     this.filename = filename;
-    this.graphics = image.createGraphics();
+    this.graphics = bufferedimage.createGraphics();
     this.graphics.dispose();
+
   }
 
 
@@ -46,58 +60,65 @@ public class ImageGenerator {
       else 
         output.createNewFile();
 
-      // Write the image to the File
-      ImageIO.write(image, "png", output);
+      // Write the image pixels to bufferedimage
+      for(int i=0; i<this.getHeight(); i++){
+        for(int j=0; j<this.getWidth(); j++){
+          bufferedimage.setRGB(j,i,image[i][j].getRGB());
+        }
+      }
+      ImageIO.write(bufferedimage, "png", output);
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
 
-
-  // setPixel when passing a Pixel object
+  // Setting a pixel value using x and y integers
   public void setPixel(int x, int y, Pixel color) {
-    int c = color.getRGB();
+
 
     // Handling Transparency
     if (color.getAlpha() < 255) {
 
-      Pixel before = new Pixel(image.getRGB(x, y));
-      c = color.correction(before).getRGB();
+      Pixel before = image[y][x];
+      color = color.correction(before);
 
     }
 
-    this.image.setRGB(x, y, c);
+    this.image[y][x] = color;
 
   }
 
 
+  // Setting a pixel value using Point class
   public void setPixel(Point p, Pixel color) {
 
-    int c = color.getRGB();
 
     // Handling Transparency
     if (color.getAlpha() < 255) {
 
-      Pixel before = new Pixel(image.getRGB(p.x, p.y));
-      c = color.correction(before).getRGB();
+      Pixel before = image[p.y][p.x];
+      color = color.correction(before);
 
     }
 
-    this.image.setRGB(p.x, p.y, c);
+    this.image[p.y][p.x] = color;
 
   }
 
 
+
+  // Getting a certain pixel from the pixel array using x and y integers
   public Pixel getPixel(int x, int y) {
-    int colorInt = this.image.getRGB(x, y);
-    return new Pixel(colorInt, true);
+    Pixel color = this.image[y][x];
+    return color;
   }
 
 
+  // Getting a certain pixel from the pixel array using the Point class
   public Pixel getPixel(Point p) {
-    int colorInt = this.image.getRGB(p.x, p.y);
-    return new Pixel(colorInt, true);
+    Pixel color = this.image[p.y][p.x];
+    return color;
   }
 
 
@@ -112,12 +133,12 @@ public class ImageGenerator {
 
 
   public int getHeight() {
-    return this.image.getHeight();
+    return this.image.length;
   }
 
 
   public int getWidth() {
-    return this.image.getWidth();
+    return this.image[0].length;
   }
 
   
